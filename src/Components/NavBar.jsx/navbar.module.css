@@ -1,0 +1,30 @@
+.container
+{
+  width: 80%;
+  height: 5rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.search
+{
+    display: flex;
+    width: 50%;
+    height: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+    
+}
+.icon
+{
+    width: 3rem;
+    height: 10rem;
+}
+.search input
+{
+    width: 80%;
+    height: 50%;
+    background-color: transparent;
+    border: none;
+    font-size: large;
+}

@@ -1,0 +1,10 @@
+body
+{
+    padding: 0;
+    margin: 0;
+    background-image: url(./assets/blurred-texture.jpg);
+    background-size: cover;  /* Ensures the image covers the entire background */
+    background-position: center;  /* Centers the image */
+    background-repeat: no-repeat;  /* Prevents tiling */
+    background-attachment: fixed;  /* Keeps the background fixed while scrolling */
+}
