@@ -16,6 +16,7 @@ const AddingProducts = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editingProductId, setEditingProductId] = useState(null);
+  const [allProducts, setAllproducts] = useState(false);
 
   // Fetch products from API
   useEffect(() => {
@@ -82,61 +83,66 @@ const AddingProducts = () => {
     const finalCategory = newCategory ? newCategory : category; // Use newCategory if provided
 
     if (editMode) {
-        // Update existing product
-        try {
-            const response = await fetch(`http://localhost:5000/api/products/${editingProductId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, price, category: finalCategory }),
-            });
+      // Update existing product
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/products/${editingProductId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, price, category: finalCategory }),
+          }
+        );
 
-            if (response.ok) {
-                const updatedProduct = await response.json();
-                setProducts((prevProducts) =>
-                    prevProducts.map((p) =>
-                        p.id === editingProductId ? updatedProduct.product : p
-                    )
-                );
+        if (response.ok) {
+          const updatedProduct = await response.json();
+          setProducts((prevProducts) =>
+            prevProducts.map((p) =>
+              p.id === editingProductId ? updatedProduct.product : p
+            )
+          );
 
-                setMessage("Product updated successfully!");
-                setShowPopup(false);
-            } else {
-                setMessage("Error updating product");
-            }
-        } catch (error) {
-            console.error("Error updating product:", error);
-            setMessage("Failed to update product");
+          setMessage("Product updated successfully!");
+          setShowPopup(false);
+        } else {
+          setMessage("Error updating product");
         }
+      } catch (error) {
+        console.error("Error updating product:", error);
+        setMessage("Failed to update product");
+      }
     } else {
-        // Add new product
-        try {
-            const response = await fetch("http://localhost:5000/api/products", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, price, category: finalCategory }),
-            });
+      // Add new product
+      try {
+        const response = await fetch("http://localhost:5000/api/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, price, category: finalCategory }),
+        });
 
-            if (response.ok) {
-                const addedProduct = await response.json();
-                setProducts([...products, addedProduct.product]);
+        if (response.ok) {
+          const addedProduct = await response.json();
+          setProducts([...products, addedProduct.product]);
 
-                // Update category list if a new category was added
-                if (newCategory && !categories.includes(newCategory)) {
-                    setCategories([...categories, newCategory]);
-                }
+          // Update category list if a new category was added
+          if (newCategory && !categories.includes(newCategory)) {
+            setCategories([...categories, newCategory]);
+          }
 
-                setMessage("Product added successfully!");
-                setShowPopup(false);
-            } else {
-                setMessage("Error adding product");
-            }
-        } catch (error) {
-            console.error("Error adding product:", error);
-            setMessage("Failed to add product");
+          setMessage("Product added successfully!");
+          setShowPopup(false);
+        } else {
+          setMessage("Error adding product");
         }
+      } catch (error) {
+        console.error("Error adding product:", error);
+        setMessage("Failed to add product");
+      }
     }
-};
-
+  };
+  const openAllProduct = () => {
+    setAllproducts(!allProducts);
+  };
 
   return (
     <div className={s.container}>
@@ -150,9 +156,13 @@ const AddingProducts = () => {
             <h2>{product.name}</h2>
             <p>${product.price}</p>
             <BiEdit className={s.edit} onClick={() => openEditPopup(product)} />
-            <AiFillDelete className={s.delete} onClick={() => handleDelete(product.id)} />
+            <AiFillDelete
+              className={s.delete}
+              onClick={() => handleDelete(product.id)}
+            />
           </div>
         ))}
+        <div1></div1>
       </div>
 
       {/* Popup Modal */}
@@ -161,25 +171,27 @@ const AddingProducts = () => {
           <div className={s.popup}>
             <h1>{editMode ? "Edit Product" : "Add New Product"}</h1>
             <form onSubmit={handleSubmit} className={s.form}>
-              <div> 
-                <h1>Enter Name:  
-                  <input 
-                    type="text" 
-                    placeholder="Product Name" 
-                    value={name} 
-                    onChange={(e) => setName(e.target.value)} 
-                    required 
+              <div>
+                <h1>
+                  Enter Name:
+                  <input
+                    type="text"
+                    placeholder="Product Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
                   />
                 </h1>
               </div>
               <div>
-                <h1>Enter Price: 
-                  <input 
-                    type="number" 
-                    placeholder="Price" 
-                    value={price} 
-                    onChange={(e) => setPrice(e.target.value)} 
-                    required 
+                <h1>
+                  Enter Price:
+                  <input
+                    type="number"
+                    placeholder="Price"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
                   />
                 </h1>
               </div>
@@ -215,7 +227,135 @@ const AddingProducts = () => {
                 <button type="submit" className={s.addBtn}>
                   {editMode ? "Update Product" : "Add Product"}
                 </button>
-                <button type="button" className={s.close} onClick={() => setShowPopup(false)}>Cancel</button>
+                <button
+                  type="button"
+                  className={s.close}
+                  onClick={() => setShowPopup(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+            {message && <p className={s.message}>{message}</p>}
+          </div>
+        </div>
+      )}
+      <button className={s.allProducts} onClick={openAllProduct}>
+        All Products
+      </button>
+
+      {allProducts && (
+        <div className={s.productsTable}>
+         <div className={s.top}>
+         <input
+            type="text"
+            className={s.searchBar}
+            placeholder="Search products..."
+            onChange={(e) => {
+              const searchValue = e.target.value.toLowerCase();
+              setProducts((prevProducts) =>
+                prevProducts.map((product) => ({
+                  ...product,
+                  visible: product.name.toLowerCase().includes(searchValue),
+                }))
+              );
+            }}
+          />
+          <button
+            className={s.backButton}
+            onClick={() => setAllproducts(false)}
+          >
+            Back
+          </button>
+         </div>
+          {products
+            .filter((product) => product.visible !== false)
+            .map((product) => (
+              <div key={product.id} className={s.itemBox}>
+                <h2>{product.name}</h2>
+                <h3>${product.price}</h3>
+                <BiEdit
+                  className={s.edit}
+                  onClick={() => openEditPopup(product)}
+                />
+                <AiFillDelete
+                  className={s.delete}
+                  onClick={() => handleDelete(product.id)}
+                />
+              </div>
+            ))}
+        </div>
+      )}
+
+      {/* Ensure the popup is rendered regardless of the `allProducts` state */}
+      {showPopup && (
+        <div className={s.popupOverlay}>
+          <div className={s.popup}>
+            <h1>{editMode ? "Edit Product" : "Add New Product"}</h1>
+            <form onSubmit={handleSubmit} className={s.form}>
+              <div>
+                <h1>
+                  Enter Name:
+                  <input
+                    type="text"
+                    placeholder="Product Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </h1>
+              </div>
+              <div>
+                <h1>
+                  Enter Price:
+                  <input
+                    type="number"
+                    placeholder="Price"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    required
+                  />
+                </h1>
+              </div>
+              <div>
+                <h1>Select Category:</h1>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  disabled={newCategory !== ""} // Disable if new category is entered
+                  required
+                >
+                  <option value="">-- Select a Category --</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <h1>Or Add New Category:</h1>
+                <input
+                  type="text"
+                  placeholder="New Category"
+                  value={newCategory}
+                  onChange={(e) => {
+                    setNewCategory(e.target.value);
+                    setCategory(""); // Clear selected category when typing new one
+                  }}
+                />
+              </div>
+              <div className={s.buttons}>
+                <button type="submit" className={s.addBtn}>
+                  {editMode ? "Update Product" : "Add Product"}
+                </button>
+                <button
+                  type="button"
+                  className={s.close}
+                  onClick={() => setShowPopup(false)}
+                >
+                  Cancel
+                </button>
               </div>
             </form>
             {message && <p className={s.message}>{message}</p>}

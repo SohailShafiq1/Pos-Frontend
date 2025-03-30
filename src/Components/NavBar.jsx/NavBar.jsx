@@ -16,7 +16,7 @@ const NavBar = ({ onSearch }) => {
   return (
     <div className={s.container}>
       <div className={s.shopName}>
-        <h1> Ramzan Jhammat Electric Store</h1>
+        <h1> Shop name </h1>
       </div>
       <div className={s.search}>
         <BiSearchAlt className={s.icon} /> 
