@@ -10,16 +10,13 @@
   flex-direction: column;
 }
 .middle {
-  width: 68%;
+  width: 93%;
   height: 100%;
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: column; 
 }
-.right {
-  width: 25%;
-  height: 100%;
-}
+
 .box {
   width: 100%;
   height: 50%;
@@ -33,4 +30,9 @@
 .icons {
   width: 3rem;
   height: 4rem;
+}
+.link
+{
+  color: inherit;
+  text-decoration: none;
 }

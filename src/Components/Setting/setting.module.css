@@ -1,0 +1,20 @@
+.container {
+    width: 90%;
+    min-height: 80vh;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two elements per row */
+    gap: 20px; /* Adds space between elements */
+    padding: 20px; /* Padding around the container */
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.elements {
+    background: linear-gradient(to right, #9a9778, #7f7d68, #6a6b5a);
+        height: 22rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    
+}
