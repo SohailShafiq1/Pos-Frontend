@@ -12,6 +12,7 @@ const AddingProducts = () => {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [newCategory, setNewCategory] = useState(""); // New category input
+  const [quantity, setQuantity] = useState(""); // New quantity input
   const [message, setMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -90,7 +91,12 @@ const AddingProducts = () => {
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, price, category: finalCategory }),
+            body: JSON.stringify({
+              name,
+              price,
+              category: finalCategory,
+              quantity,
+            }),
           }
         );
 
@@ -117,7 +123,12 @@ const AddingProducts = () => {
         const response = await fetch("http://localhost:5000/api/products", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, price, category: finalCategory }),
+          body: JSON.stringify({
+            name,
+            price,
+            category: finalCategory,
+            quantity,
+          }),
         });
 
         if (response.ok) {
@@ -154,7 +165,8 @@ const AddingProducts = () => {
         {products.map((product) => (
           <div key={product.id} className={s.items}>
             <h2>{product.name}</h2>
-            <p>${product.price}</p>
+            <p>Price: ${product.price}</p>
+            <p>Quantity: {product.quantity}</p> {/* Display quantity */}
             <BiEdit className={s.edit} onClick={() => openEditPopup(product)} />
             <AiFillDelete
               className={s.delete}
@@ -223,6 +235,18 @@ const AddingProducts = () => {
                   }}
                 />
               </div>
+              <div>
+                <h1>
+                  Enter Quantity:
+                  <input
+                    type="number"
+                    placeholder="Quantity"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    required
+                  />
+                </h1>
+              </div>
               <div className={s.buttons}>
                 <button type="submit" className={s.addBtn}>
                   {editMode ? "Update Product" : "Add Product"}
@@ -246,28 +270,28 @@ const AddingProducts = () => {
 
       {allProducts && (
         <div className={s.productsTable}>
-         <div className={s.top}>
-         <input
-            type="text"
-            className={s.searchBar}
-            placeholder="Search products..."
-            onChange={(e) => {
-              const searchValue = e.target.value.toLowerCase();
-              setProducts((prevProducts) =>
-                prevProducts.map((product) => ({
-                  ...product,
-                  visible: product.name.toLowerCase().includes(searchValue),
-                }))
-              );
-            }}
-          />
-          <button
-            className={s.backButton}
-            onClick={() => setAllproducts(false)}
-          >
-            Back
-          </button>
-         </div>
+          <div className={s.top}>
+            <input
+              type="text"
+              className={s.searchBar}
+              placeholder="Search products..."
+              onChange={(e) => {
+                const searchValue = e.target.value.toLowerCase();
+                setProducts((prevProducts) =>
+                  prevProducts.map((product) => ({
+                    ...product,
+                    visible: product.name.toLowerCase().includes(searchValue),
+                  }))
+                );
+              }}
+            />
+            <button
+              className={s.backButton}
+              onClick={() => setAllproducts(false)}
+            >
+              Back
+            </button>
+          </div>
           {products
             .filter((product) => product.visible !== false)
             .map((product) => (
@@ -344,6 +368,18 @@ const AddingProducts = () => {
                     setCategory(""); // Clear selected category when typing new one
                   }}
                 />
+              </div>
+              <div>
+                <h1>
+                  Enter Quantity:
+                  <input
+                    type="number"
+                    placeholder="Quantity"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    required
+                  />
+                </h1>
               </div>
               <div className={s.buttons}>
                 <button type="submit" className={s.addBtn}>
